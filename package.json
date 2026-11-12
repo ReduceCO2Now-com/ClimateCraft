@@ -1,4 +1,8 @@
 {
+  "name": "climatecraft",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@minecraft/server": "^2.11.0",
@@ -9,5 +13,14 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.72.2",
     "vitest": "^5.1.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "build": "node scripts/build/build.mjs"
   }
 }

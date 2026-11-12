@@ -1,6 +1,5 @@
 🌍 CO2 Reduce: Bedrock Edition
 
-
 A Survival & Environmental Simulation Mod
 
 📖 Overview
@@ -47,7 +46,6 @@ Water slowly spreads into lower areas.
 Desertification & Fires
 Grass can turn into sand, and wood can catch fire under extreme conditions.
 
-
 🎮 Gameplay Features
 
 HUD Display
@@ -62,7 +60,6 @@ Multiple Endings
 Your overall impact determines how things end.
 
 📂 Project Structure
-
 
 scripts/
 
@@ -79,7 +76,6 @@ scripts/
 ├── eventHandlers.js
 
 └── main.js
-
 
 📜 Development Notes
 

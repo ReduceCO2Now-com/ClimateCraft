@@ -20,10 +20,8 @@
   "dependencies": [
     {
       "module_name": "@minecraft/server",
-      "version": "1.12.0" 
+      "version": "1.12.0"
     }
   ],
-  "capabilities": [
-    "script_eval"
-  ]
+  "capabilities": ["script_eval"]
 }
