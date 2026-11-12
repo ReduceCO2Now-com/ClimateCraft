@@ -1,7 +1,7 @@
 
 import { build } from "esbuild";
 
-const result = await build({
+await build({
   entryPoints: ["src/main.ts"],
 
   outfile: "packs/behavior_pack/scripts/main.js",
