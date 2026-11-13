@@ -1,0 +1,35 @@
+name: Automatically Create Pull Requests
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+permissions: {}
+
+jobs:
+  create-pr:
+    name: Create PR to main
+
+    if: github.actor == 'Merouanos'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create pull request if one doesn't exist
+        env:
+          GH_TOKEN: ${{ secrets.GH_PR_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+
+        run: |
+          if gh pr view "$BRANCH" --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo "An existing PR already exists for this branch."
+          else
+            gh pr create \
+              --repo "$GH_REPO" \
+              --base main \
+              --head "$BRANCH" \
+              --title "Auto PR: $BRANCH" \
+              --body "Automatically created after pushing changes to \`$BRANCH\`."
+          fi
