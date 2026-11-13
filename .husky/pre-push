@@ -1,2 +1,26 @@
 npm run typecheck
 npm run test -- --run
+
+
+#!/usr/bin/env sh
+
+branch="$(git branch --show-current)"
+
+if [ "$branch" = "main" ]; then
+  exit 0
+fi
+
+echo "Checking whether your branch is up to date with main..."
+
+git fetch origin main || exit 1
+
+behind="$(git rev-list --count HEAD..origin/main)"
+
+if [ "$behind" -gt 0 ]; then
+  echo "Your branch is behind origin/main by $behind commit(s)."
+  echo "Update it before pushing:"
+  echo "  git rebase origin/main"
+  exit 1
+fi
+
+echo "Your branch is up to date with main."
