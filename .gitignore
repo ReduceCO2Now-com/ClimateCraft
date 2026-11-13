@@ -79,6 +79,7 @@ Desktop.ini
 .stylelintcache
 .cache/
 .parcel-cache/
+.vitest/
 
 # ==========================================
 # Local Minecraft development files
@@ -106,3 +107,10 @@ development_resource_packs/
 
 test-results/
 playwright-report/
+
+# ==========================================
+# CodeQL local analysis artifacts
+# ==========================================
+
+.codeql/
+codeql-databases/
