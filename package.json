@@ -29,7 +29,11 @@
     "package:release": "node scripts/package/package-release.mjs"
   },
   "lint-staged": {
-    "*.{js,mjs,cjs,ts,mts,cts,json,yaml,yml,md}": [
+    "*.{js,mjs,cjs,ts,mts,cts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,yaml,yml,md}": [
       "prettier --write"
     ]
   }
