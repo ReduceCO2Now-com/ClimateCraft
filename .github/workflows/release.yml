@@ -59,11 +59,90 @@ jobs:
       - name: Package Minecraft add-on
         run: node scripts/package/package-release.mjs "$GITHUB_REF_NAME"
 
+      - name: Verify Minecraft package
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          ASSET="dist/ClimateCraft-$TAG.mcpack"
+          TEMP_DIR="$(mktemp -d)"
+
+          trap 'rm -rf "$TEMP_DIR"' EXIT
+
+          echo "Checking package exists..."
+          test -s "$ASSET"
+
+          echo "Checking ZIP integrity..."
+          unzip -t "$ASSET"
+
+          echo "Extracting package..."
+          unzip -q "$ASSET" -d "$TEMP_DIR"
+
+          echo "Checking required files..."
+          test -s "$TEMP_DIR/manifest.json"
+          test -s "$TEMP_DIR/scripts/main.js"
+
+          echo "Validating manifest..."
+          node --input-type=module - "$TEMP_DIR/manifest.json" "$TAG" <<'NODE'
+          import { readFileSync } from "node:fs";
+
+          const [manifestPath, tag] = process.argv.slice(2);
+
+          const manifest = JSON.parse(
+            readFileSync(manifestPath, "utf8")
+          );
+
+          const match = /^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?$/.exec(tag);
+
+          if (!match) {
+            throw new Error(`Invalid release tag: ${tag}`);
+          }
+
+          const expectedVersion = match.slice(1, 4).map(Number);
+
+          const sameVersion = (version) =>
+            Array.isArray(version) &&
+            version.length === 3 &&
+            version.every((value, index) => value === expectedVersion[index]);
+
+          if (!sameVersion(manifest.header?.version)) {
+            throw new Error("Header version does not match release tag.");
+          }
+
+          if (!Array.isArray(manifest.modules) || manifest.modules.length === 0) {
+            throw new Error("Manifest contains no modules.");
+          }
+
+          for (const module of manifest.modules) {
+            if (!sameVersion(module.version)) {
+              throw new Error(
+                `Module version does not match release tag: ${module.type}`
+              );
+            }
+          }
+
+          const scriptModule = manifest.modules.find(
+            (module) => module.type === "script"
+          );
+
+          if (scriptModule?.entry !== "scripts/main.js") {
+            throw new Error("Script module entry is incorrect.");
+          }
+
+          console.log("Manifest validation successful.");
+          console.log(`Verified version: ${tag}`);
+          NODE
+
+          echo "ClimateCraft package verification successful."
+
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
         run: |
+          set -euo pipefail
+
           ASSET="dist/ClimateCraft-$TAG.mcpack"
 
           if gh release view "$TAG" >/dev/null 2>&1; then
