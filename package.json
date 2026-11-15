@@ -7,6 +7,7 @@
     "@eslint/js": "^10.0.1",
     "@minecraft/server": "^2.11.0",
     "@minecraft/server-ui": "^2.3.0",
+    "archiver": "^8.0.0",
     "esbuild": "^0.28.2",
     "eslint": "^10.14.0",
     "husky": "^9.1.7",
@@ -24,7 +25,8 @@
     "format:check": "prettier . --check",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
-    "build": "node scripts/build/build.mjs"
+    "build": "node scripts/build/build.mjs && node scripts/deploy/deploy-local.mjs",
+    "package:release": "node scripts/package/package-release.mjs"
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts,json,yaml,yml,md}": [

@@ -1,0 +1,30 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ClimateCraft",
+    "description": "A climate awareness add-on for Minecraft Bedrock Edition.",
+    "uuid": "9495afdc-ab88-4979-824a-eec31288d6f0",
+    "version": [2, 0, 0],
+    "min_engine_version": [1, 21, 0]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "f8fece60-2896-4c0a-bcf6-0361972a39b1",
+      "version": [2, 0, 0]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "7c5470e7-5b35-4bbc-837e-8bf38c86be41",
+      "version": [2, 0, 0],
+      "entry": "scripts/main.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.11.0"
+    }
+  ]
+}
