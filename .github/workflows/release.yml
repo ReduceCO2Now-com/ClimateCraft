@@ -64,17 +64,31 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
         run: |
-          if [[ "$TAG" == *-* ]]; then
-            gh release create "$TAG" \
-              "dist/ClimateCraft-$TAG.mcpack" \
-              --title "ClimateCraft $TAG" \
-              --generate-notes \
-              --verify-tag \
-              --prerelease
+          ASSET="dist/ClimateCraft-$TAG.mcpack"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists. Updating asset..."
+
+            gh release upload "$TAG" "$ASSET" --clobber
+
+            gh release edit "$TAG" \
+              --title "ClimateCraft $TAG"
+
           else
-            gh release create "$TAG" \
-              "dist/ClimateCraft-$TAG.mcpack" \
-              --title "ClimateCraft $TAG" \
-              --generate-notes \
-              --verify-tag
+            echo "Creating release $TAG..."
+
+            if [[ "$TAG" == *-* ]]; then
+              gh release create "$TAG" \
+                "$ASSET" \
+                --title "ClimateCraft $TAG" \
+                --generate-notes \
+                --verify-tag \
+                --prerelease
+            else
+              gh release create "$TAG" \
+                "$ASSET" \
+                --title "ClimateCraft $TAG" \
+                --generate-notes \
+                --verify-tag
+            fi
           fi
